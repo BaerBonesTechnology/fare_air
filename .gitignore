@@ -53,3 +53,6 @@ firebase.json
 .idea/misc.xml
 .idea/vcs.xml
 
+# Updatese to Config file for firebase, ignoring will prevent sensitive information from being pushed to the repository
+config/**
+/config
