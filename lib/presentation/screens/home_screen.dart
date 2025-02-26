@@ -16,13 +16,14 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100,
         bottom: PreferredSize(
             preferredSize: Size(size.width, 2),
             child: Divider(
               color: Colors.black,
               thickness: 2,
-              indent: size.width * 0.3,
-              endIndent: size.width * 0.3,
+              indent: size.width * 0.1,
+              endIndent: size.width * 0.1,
             )),
         centerTitle: true,
         leading: controller.content?.userImage != null

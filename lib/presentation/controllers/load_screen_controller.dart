@@ -25,6 +25,7 @@ class InitialLoadScreenController extends BaseScreenController {
           }
         },
       );
+
       tracker.logEvent('anonymous_user_signed_in');
     }
     build();

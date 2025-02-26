@@ -6,6 +6,7 @@ class ApplicationConfig {
     this.version,
     this.description,
     this.author,
+    this.rapidApiKey,
     this.firebaseConfig,
   });
 
@@ -14,6 +15,7 @@ class ApplicationConfig {
     version = json['version'];
     description = json['description'];
     author = json['author'];
+    rapidApiKey = json['rapidApiKey'];
     firebaseConfig = json['firebaseConfig'] != null
         ? FirebaseConfig.fromJson(json['firebaseConfig'])
         : null;
@@ -22,6 +24,7 @@ class ApplicationConfig {
   String? version;
   String? description;
   String? author;
+  String? rapidApiKey;
   FirebaseConfig? firebaseConfig;
 
   Map<String, dynamic> toJson() {
@@ -30,6 +33,7 @@ class ApplicationConfig {
     map['version'] = version;
     map['description'] = description;
     map['author'] = author;
+    map['rapidApiKey'] = rapidApiKey;
     if (firebaseConfig != null) {
       map['firebaseConfig'] = firebaseConfig?.toJson();
     }

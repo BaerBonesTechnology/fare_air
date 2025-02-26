@@ -1,10 +1,4 @@
-import 'dart:convert';
-
 import 'application_config.dart';
-
-ConfigModel configModelFromJson(String str) =>
-    ConfigModel.fromJson(json.decode(str));
-String configModelToJson(ConfigModel data) => json.encode(data.toJson());
 
 class ConfigModel {
   ConfigModel({

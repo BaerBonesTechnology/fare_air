@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</keey>
+	<string>Location is required in order for the application to know where to find the nearest airport, hotel, and car rental places.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is required in order for the application to know where to find the nearest airport, hotel, and car rental places. This permission is for older devices.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location is required in order for the application to know where to find the nearest airport, hotel, and car rental places while on the go. This permission is ALWAYS enabled.</string>
 </dict>
 </plist>

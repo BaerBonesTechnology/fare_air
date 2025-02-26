@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fare_air/presentation/di/service_controllers/location_state_controller.dart';
+import 'package:fare_air/services/impl/location_service_impl.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,18 +66,26 @@ class BootstrapperImpl implements Bootstrapper {
       storageProvider.overrideWith((ref) => FirebaseStorage.instance),
       trackerProvider.overrideWith(
           (ref) => TrackerImpl(ref.read(firebaseAnalyticsProvider))),
-      authProvider
-          .overrideWith((ref) => AuthStateController(AuthenticationService(
-                ref.read(firebaseAuthProvider),
-                ref.read(firebaseAnalyticsProvider),
-                ref.read(sharedPreferencesProvider),
-              ))),
+      authProvider.overrideWith(
+        (ref) => AuthStateController(AuthenticationService(
+          ref.read(firebaseAuthProvider),
+          ref.read(firebaseAnalyticsProvider),
+          ref.read(sharedPreferencesProvider),
+        )),
+      ),
+      locationProvider.overrideWith(
+        (ref) => LocationStateController(
+          LocationServiceImpl(ref.read(sharedPreferencesProvider)),
+        ),
+      ),
       homeScreenContentProvider.overrideWith((ref) => HomeScreenContent()),
     ]);
 
     if (useEmulators) {
       await _startEmulators(container);
     }
+
+    container.read(locationProvider)?.checkPermissions();
 
     return container;
   }
