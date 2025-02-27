@@ -5,18 +5,30 @@ import 'package:json_annotation/json_annotation.dart';
 part 'current_airport_data.g.dart';
 
 @JsonSerializable()
-@JsonValue('current')
-class CurrentAirportData {
-  CurrentAirportData({
+class AirportData {
+  AirportData({
+    this.skyId,
+    this.entityId,
     this.presentation,
     this.navigation,
   });
 
+  String? skyId;
+  String? entityId;
   Presentation? presentation;
   NavigationData? navigation;
 
-  factory CurrentAirportData.fromJson(Map<String, dynamic> json) =>
-      _$CurrentAirportDataFromJson(json);
+  factory AirportData.fromJson(Map<String, dynamic> json) =>
+      _$AirportDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CurrentAirportDataToJson(this);
+  Map<String, dynamic> toJson() => _$AirportDataToJson(this);
+
+  static AirportData? empty() {
+    return AirportData(
+      skyId: '',
+      entityId: '',
+      presentation: Presentation.empty(),
+      navigation: NavigationData.empty(),
+    );
+  }
 }

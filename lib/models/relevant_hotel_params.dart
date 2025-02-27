@@ -3,7 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 part 'relevant_hotel_params.g.dart';
 
 @JsonSerializable()
-@JsonValue('relevantHotelParams')
 class RelevantHotelParams {
   RelevantHotelParams({
     this.entityId,

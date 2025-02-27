@@ -5,7 +5,6 @@ import 'package:json_annotation/json_annotation.dart';
 part 'navigation_data.g.dart';
 
 @JsonSerializable()
-@JsonValue('navigation')
 class NavigationData {
   NavigationData({
     this.entityId,
@@ -25,4 +24,12 @@ class NavigationData {
       _$NavigationDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$NavigationDataToJson(this);
+
+  static empty() {
+    return NavigationData(
+        entityId: '',
+        entityType: '',
+        localizedName: '',
+        relevantFlightParams: RelevantFlightParams.empty());
+  }
 }

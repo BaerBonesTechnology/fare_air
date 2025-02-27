@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'airport_data.dart';
+import 'airport_data_groups.dart';
 
 part 'nearby_airports_response.g.dart';
 
@@ -13,8 +13,8 @@ class NearbyAirportResponse {
   });
 
   bool? status;
-  num? timestamp;
-  AirportData? data;
+  int? timestamp;
+  AirportDataGroups? data;
 
   factory NearbyAirportResponse.fromJson(Map<String, dynamic> json) =>
       _$NearbyAirportResponseFromJson(json);
@@ -25,6 +25,6 @@ class NearbyAirportResponse {
     return NearbyAirportResponse(
         status: false,
         timestamp: 0,
-        data: AirportData(current: null, nearby: [], recent: []));
+        data: AirportDataGroups(current: null, nearby: [], recent: []));
   }
 }

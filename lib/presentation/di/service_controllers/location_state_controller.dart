@@ -3,15 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location/location.dart';
 
 class LocationStateController extends StateController<LocationData?> {
-  LocationStateController(this._locationService) : super(null);
-  final LocationService? _locationService;
+  LocationStateController(this.service) : super(null);
+  final LocationService? service;
 
-  void checkPermissions() async =>
-      state = await _locationService?.checkPermissions();
+  Future<void> checkPermissions() async =>
+      state = await service?.checkPermissions();
 
   String? loadLastSearchedHomeLocation() =>
-      _locationService?.loadLastSearchedHomeLocation();
+      service?.loadLastSearchedHomeLocation();
 
   void saveLastSearchedHomeLocation(String location) async =>
-      _locationService?.saveLastSearchedHomeLocation(location);
+      service?.saveLastSearchedHomeLocation(location);
 }

@@ -21,4 +21,13 @@ class RelevantFlightParams {
       _$RelevantFlightParamsFromJson(json);
 
   Map<String, dynamic> toJson() => _$RelevantFlightParamsToJson(this);
+
+  static empty() {
+    return RelevantFlightParams(
+      skyId: '',
+      entityId: '',
+      flightPlaceType: '',
+      localizedName: '',
+    );
+  }
 }

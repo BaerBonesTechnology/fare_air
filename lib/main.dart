@@ -1,10 +1,11 @@
+import 'package:fare_air/presentation/screens/home_screen.dart';
+import 'package:fare_air/presentation/styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'config/impl/bootstrapper_impl.dart';
 import 'constants/environment_constants.dart';
-import 'router/router.dart';
 
 void main() async {
   await BootstrapperImpl()
@@ -15,9 +16,10 @@ void main() async {
     runApp(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(
-          routerConfig: router,
+        child: MaterialApp(
+          theme: theme,
           title: appName ?? '',
+          home: const HomeScreen(),
         ),
       ),
     );

@@ -1,9 +1,9 @@
 extension DateTimeToJson on DateTime {
-  String toJson() {
-    return toIso8601String();
+  int toJson() {
+    return millisecond;
   }
 
-  DateTime fromJson(String date) {
-    return DateTime.parse(date);
+  static fromJson(int date) {
+    return DateTime.fromMillisecondsSinceEpoch(date);
   }
 }

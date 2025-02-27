@@ -10,10 +10,10 @@ NearbyAirportResponse _$NearbyAirportResponseFromJson(
         Map<String, dynamic> json) =>
     NearbyAirportResponse(
       status: json['status'] as bool?,
-      timestamp: json['timestamp'] as num?,
+      timestamp: (json['timestamp'] as num?)?.toInt(),
       data: json['data'] == null
           ? null
-          : AirportData.fromJson(json['data'] as Map<String, dynamic>),
+          : AirportDataGroups.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$NearbyAirportResponseToJson(

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 
 class ClientService {
@@ -11,9 +9,9 @@ class ClientService {
       String url, Map<String, String> headers) async {
     try {
       final response = await _dio.get(url, options: Options(headers: headers));
-      return jsonDecode(response.data);
+      return response.data;
     } on DioException catch (e) {
-      return e.response?.data;
+      rethrow;
     }
   }
 }

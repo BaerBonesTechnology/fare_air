@@ -6,8 +6,9 @@ part of 'current_airport_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CurrentAirportData _$CurrentAirportDataFromJson(Map<String, dynamic> json) =>
-    CurrentAirportData(
+AirportData _$AirportDataFromJson(Map<String, dynamic> json) => AirportData(
+      skyId: json['skyId'] as String?,
+      entityId: json['entityId'] as String?,
       presentation: json['presentation'] == null
           ? null
           : Presentation.fromJson(json['presentation'] as Map<String, dynamic>),
@@ -16,8 +17,10 @@ CurrentAirportData _$CurrentAirportDataFromJson(Map<String, dynamic> json) =>
           : NavigationData.fromJson(json['navigation'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$CurrentAirportDataToJson(CurrentAirportData instance) =>
+Map<String, dynamic> _$AirportDataToJson(AirportData instance) =>
     <String, dynamic>{
+      'skyId': instance.skyId,
+      'entityId': instance.entityId,
       'presentation': instance.presentation,
       'navigation': instance.navigation,
     };

@@ -1,0 +1,22 @@
+import 'package:fare_air/models/current_airport_data.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'airport_data_groups.g.dart';
+
+@JsonSerializable()
+class AirportDataGroups {
+  AirportDataGroups({
+    this.current,
+    this.nearby,
+    this.recent,
+  });
+
+  AirportData? current;
+  List<AirportData>? nearby;
+  List<AirportData>? recent;
+
+  factory AirportDataGroups.fromJson(Map<String, dynamic> json) =>
+      _$AirportDataGroupsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AirportDataGroupsToJson(this);
+}

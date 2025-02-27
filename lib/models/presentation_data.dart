@@ -19,4 +19,12 @@ class Presentation {
       _$PresentationFromJson(json);
 
   Map<String, dynamic> toJson() => _$PresentationToJson(this);
+
+  static empty() {
+    return Presentation(
+      title: '',
+      suggestionTitle: '',
+      subtitle: '',
+    );
+  }
 }

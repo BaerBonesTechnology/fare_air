@@ -1,24 +1,22 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../analytics/tracker.dart';
-import '../di/providers/analytics_provides.dart';
+import '../../../analytics/tracker.dart';
+import '../../di/providers/analytics_provides.dart';
 
 class BaseScreenController {
-  final WidgetRef ref;
+  final Ref ref;
   late final Tracker tracker;
 
   BaseScreenController(
     this.ref,
   ) {
     tracker = ref.read(trackerProvider);
-    initialize();
   }
 
-  void initialize() {
-    build();
-  }
+  void initialize() {}
 
-  void build() {}
+  void build(BuildContext context) {}
   void onClose() {}
 
   void dispose() {
