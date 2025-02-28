@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 class ClientService {
   ClientService();
@@ -11,7 +12,8 @@ class ClientService {
       final response = await _dio.get(url, options: Options(headers: headers));
       return response.data;
     } on DioException catch (e) {
-      rethrow;
+      debugPrint(e.toString());
+      throw Exception('Failed to fetch data');
     }
   }
 }

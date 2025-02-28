@@ -1,16 +1,15 @@
 import 'package:fare_air/models/itinerary.dart';
 import 'package:fare_air/presentation/widgets/itinerary_details_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class ItineraryWidget extends ConsumerWidget {
+class ItineraryWidget extends StatelessWidget {
   const ItineraryWidget({super.key, required this.itinerary});
 
   final Itinerary itinerary;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     DateFormat dateFormat = DateFormat('hh:mm a');
     return Card(
       child: ListTile(

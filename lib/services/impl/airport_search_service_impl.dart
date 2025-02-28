@@ -85,8 +85,6 @@ class AirportSearchServiceImpl implements AirportSearchService {
 
       return AsyncError(e, StackTrace.current);
     }
-
-    return AsyncError(Exception('Something went wrong'), StackTrace.current);
   }
 
   void _cacheAirportResponse(response) async {

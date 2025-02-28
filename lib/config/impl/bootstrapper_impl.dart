@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../analytics/impl/tracker_impl.dart';
-import '../../presentation/di/providers/analytics_provides.dart';
-import '../../presentation/di/providers/core_providers.dart';
-import '../../presentation/di/service_controllers/airport_service_controller.dart';
-import '../../presentation/di/service_controllers/location_state_controller.dart';
+import '../../di/providers/analytics_provides.dart';
+import '../../di/providers/core_providers.dart';
+import '../../di/service_controllers/airport_service_controller.dart';
+import '../../di/service_controllers/location_state_controller.dart';
 import '../../services/client_service.dart';
 import '../../services/impl/airport_search_service_impl.dart';
 import '../../services/impl/location_service_impl.dart';

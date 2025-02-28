@@ -12,8 +12,3 @@ FlightSearchData _$FlightSearchDataFromJson(Map<String, dynamic> json) =>
           .map((e) => Itinerary.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
-
-Map<String, dynamic> _$FlightSearchDataToJson(FlightSearchData instance) =>
-    <String, dynamic>{
-      'itineraries': instance.itineraries,
-    };

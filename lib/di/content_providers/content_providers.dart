@@ -1,12 +1,11 @@
-import 'package:fare_air/models/nearby_airports_response.dart';
-import 'package:fare_air/presentation/di/providers/core_providers.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fare_air/models/flight_search_params.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models/airport_query_response.dart';
 import '../../../models/content/bottom_sheet_content.dart';
 import '../../../models/content/home_screen_content.dart';
+import '../providers/core_providers.dart';
 
 part 'content_providers.g.dart';
 
@@ -41,6 +40,29 @@ class HomeScreenNotifier extends _$HomeScreenNotifier {
   Future<void> updateHomeScreenContent(HomeScreenContent content) async {
     state = AsyncData(content);
   }
+
+  Future getFlights(WidgetRef ref, FlightSearchParameters query) async {
+    var content = state.value;
+
+    state = const AsyncLoading();
+
+    if (content != null) {
+      await ref
+          .read(airportServiceControllerProvider)
+          ?.searchForFlights(query)
+          .then((value) {
+        if (value is AsyncData) {
+          // Parse into FlightSearchResponse
+          final response = value.value;
+          content = content?.copyWith(
+              searchResults: (response?.data?.itineraries ?? []).isEmpty
+                  ? content?.searchResults ?? []
+                  : response?.data?.itineraries ?? []);
+        }
+      });
+      await updateHomeScreenContent(content ?? HomeScreenContent.empty());
+    }
+  }
 }
 
 @riverpod
@@ -55,6 +77,8 @@ class AirportQueryNotifier extends _$AirportQueryNotifier {
   }
 
   Future<void> updateAirportQuery(WidgetRef ref, String query) async {
+    state = const AsyncLoading();
+
     var content = state.value?.copyWith(
       data: const [],
     );

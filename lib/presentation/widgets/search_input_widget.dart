@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../di/content_providers/content_providers.dart';
 import '../../models/content/home_screen_content.dart';
-import '../di/content_providers/content_providers.dart';
 
 class TripSearchInputWidget extends ConsumerStatefulWidget {
   const TripSearchInputWidget({
@@ -25,8 +25,6 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-    final FocusNode originFocusNode = FocusNode();
-    final FocusNode destinationFocusNode = FocusNode();
     final originTextController = TextEditingController(
         text: ref
                 .watch(homeScreenNotifierProvider)
@@ -66,12 +64,8 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                 controller: originTextController,
                 enabled: true,
                 canRequestFocus: false,
-                onTap: () async {
-                  widget.controller.openBottomSheet(context, ref, originTag);
-                  originFocusNode.canRequestFocus
-                      ? originFocusNode.requestFocus()
-                      : () {};
-                },
+                onTap: () =>
+                    widget.controller.openBottomSheet(context, ref, originTag),
                 decoration: InputDecoration(
                   label: Row(
                     children: [

@@ -4,9 +4,9 @@ import 'package:fare_air/presentation/widgets/search_input_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../di/content_providers/content_providers.dart';
 import '../../models/content/home_screen_content.dart';
 import '../../models/itinerary.dart';
-import '../di/content_providers/content_providers.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -21,8 +21,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final HomeStateController controller = HomeStateController();
 
     switch (ref.watch(homeScreenNotifierProvider)) {
-      case AsyncLoading _:
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       case AsyncData<HomeScreenContent?> data:
         return data.hasValue
             ? _buildHomeScreen(ref, context, controller)
@@ -43,7 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ));
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       default:
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        return _buildHomeScreen(ref, context, controller);
     }
   }
 
@@ -58,7 +56,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ref.watch(homeScreenNotifierProvider).value?.header ??
                 'header error'),
       ),
-      body: _buildSearchResults(ref, controller),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TripSearchInputWidget(controller: controller),
+          _buildSearchResults(ref, controller),
+        ],
+      ),
     );
   }
 
@@ -67,49 +71,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       case AsyncLoading _:
         return const Center(child: CircularProgressIndicator());
       case AsyncData<HomeScreenContent?> data:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TripSearchInputWidget(controller: controller),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              height: MediaQuery.of(context).size.height * 0.6299,
-              child: SingleChildScrollView(
-                controller: ScrollController(),
-                child: Column(
-                  children: ref.watch(homeScreenNotifierProvider).hasError
-                      ? const [
-                          Center(child: Text('Error loading search results'))
-                        ]
-                      : ref
-                                  .watch(homeScreenNotifierProvider)
-                                  .value
-                                  ?.searchResults
-                                  .isNotEmpty ==
-                              true
-                          ? List.generate(
-                              ref
-                                      .watch(homeScreenNotifierProvider)
-                                      .value
-                                      ?.searchResults
-                                      .length ??
-                                  0, (index) {
-                              return ItineraryWidget(
-                                  itinerary: ref
-                                          .watch(homeScreenNotifierProvider)
-                                          .value
-                                          ?.searchResults[index] ??
-                                      Itinerary());
-                            })
-                          : const [
-                              Center(
-                                  child: Text(
-                                      'No search results.\nPlease search for flights'))
-                            ],
-                ),
-              ),
+        return Container(
+          margin: const EdgeInsets.only(top: 10),
+          height: data.value?.searchResults.isNotEmpty == true
+              ? MediaQuery.of(context).size.height * 0.6299
+              : null,
+          child: SingleChildScrollView(
+            controller: ScrollController(),
+            child: Column(
+              children: data.hasError
+                  ? const [Center(child: Text('Error loading search results'))]
+                  : data.value?.searchResults.isNotEmpty == true
+                      ? List.generate(data.value?.searchResults.length ?? 0,
+                          (index) {
+                          return ItineraryWidget(
+                              itinerary: data.value?.searchResults[index] ??
+                                  Itinerary());
+                        })
+                      : const [
+                          Center(
+                              child: Text(
+                                  'No search results.\nPlease search for flights'))
+                        ],
             ),
-          ],
+          ),
         );
       case AsyncError _:
         return const Center(child: Text('Error loading search results'));

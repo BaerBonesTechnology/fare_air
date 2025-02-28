@@ -4,8 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/content/bottom_sheet_content.dart';
 import '../../../models/content/home_screen_content.dart';
 import '../../../models/flight_search_params.dart';
-import '../di/content_providers/content_providers.dart';
-import '../di/providers/core_providers.dart';
+import '../../di/content_providers/content_providers.dart';
 import '../widgets/search_bottom_sheet.dart';
 
 class HomeStateController {
@@ -48,18 +47,8 @@ class HomeStateController {
     );
 
     await ref
-        .watch(airportServiceControllerProvider)
-        ?.searchForFlights(params)
-        .then((value) {
-      debugPrint('Search results: $value');
-      // update home screen content with search results
-      ref
-          .watch(homeScreenNotifierProvider.notifier)
-          .updateHomeScreenContent(content.value?.copyWith(
-                searchResults: value.value?.data?.itineraries,
-              ) ??
-              HomeScreenContent.empty());
-    });
+        .watch(homeScreenNotifierProvider.notifier)
+        .getFlights(ref, params);
   }
 
   Future updateAdultsCount(WidgetRef ref, int count) async {

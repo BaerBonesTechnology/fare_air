@@ -24,7 +24,7 @@ final bottomSheetNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$BottomSheetNotifier = AutoDisposeAsyncNotifier<BottomSheetContent>;
 String _$homeScreenNotifierHash() =>
-    r'204f0aa6bd4f85094598aa7b486cdcde9cbce9ff';
+    r'0040ee188ac99d1ec146a247b8e86ad11db8477d';
 
 /// See also [HomeScreenNotifier].
 @ProviderFor(HomeScreenNotifier)
@@ -41,7 +41,7 @@ final homeScreenNotifierProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$HomeScreenNotifier = AutoDisposeAsyncNotifier<HomeScreenContent>;
 String _$airportQueryNotifierHash() =>
-    r'0c820bbcc292e952fadefcc963f55cf45e096b9b';
+    r'd55a277f1baaaa07a8f0817810268083e681223d';
 
 /// See also [AirportQueryNotifier].
 @ProviderFor(AirportQueryNotifier)

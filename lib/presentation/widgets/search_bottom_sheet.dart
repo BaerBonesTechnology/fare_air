@@ -4,9 +4,9 @@ import 'package:fare_air/models/content/bottom_sheet_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../di/content_providers/content_providers.dart';
 import '../../models/airport_query_response.dart';
 import '../../models/content/home_screen_content.dart';
-import '../di/content_providers/content_providers.dart';
 
 class SearchBottomSheet extends ConsumerStatefulWidget {
   const SearchBottomSheet({
@@ -84,7 +84,7 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
             height: MediaQuery.of(context).size.height * 0.8,
             padding: const EdgeInsets.all(8),
             child: ListView.builder(
-              itemCount: results.value.data.length ?? 0,
+              itemCount: results.value.data.length,
               itemBuilder: (context, index) {
                 final airport =
                     results.value.data[index].navigation?.relevantFlightParams;
