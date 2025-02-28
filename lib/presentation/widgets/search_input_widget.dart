@@ -1,24 +1,19 @@
 import 'dart:math' as math;
 
-import 'package:fare_air/presentation/di/providers/core_providers.dart';
+import 'package:fare_air/constants/defaults.dart';
+import 'package:fare_air/models/content/bottom_sheet_content.dart';
+import 'package:fare_air/presentation/widgets/search_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+import '../../models/content/home_screen_content.dart';
+import '../di/content_providers/content_providers.dart';
 
 class TripSearchInputWidget extends ConsumerStatefulWidget {
   const TripSearchInputWidget({
     super.key,
-    required this.originFocusNode,
-    required this.destinationFocusNode,
-    this.onSearchOriginTap,
-    this.onSearchDestinationTap,
-    this.initialSearchLocation,
   });
-
-  final FocusNode originFocusNode;
-  final FocusNode destinationFocusNode;
-  final Function()? onSearchOriginTap;
-  final Function()? onSearchDestinationTap;
-  final String? initialSearchLocation;
 
   @override
   ConsumerState createState() => _SearchInputWidgetState();
@@ -27,11 +22,32 @@ class TripSearchInputWidget extends ConsumerStatefulWidget {
 class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final searchService = ref.watch(airportServiceControllerProvider)?.state;
-    final originTextController =
-        TextEditingController(text: widget.initialSearchLocation ?? '');
-    final destinationTextController = TextEditingController();
+    final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+
+    final FocusNode originFocusNode = FocusNode();
+    final FocusNode destinationFocusNode = FocusNode();
+
+    final originTextController = TextEditingController(
+        text: ref
+                .watch(homeScreenNotifierProvider)
+                .value
+                ?.initialSearchLocation ??
+            '');
+    final destinationTextController = TextEditingController(
+        text: ref
+                .watch(homeScreenNotifierProvider)
+                .value
+                ?.departureSearchLocation ??
+            '');
+    final departureDateController = TextEditingController(
+        text: dateFormat.format(
+            ref.watch(homeScreenNotifierProvider).value?.departureDate ??
+                DateTime.now().copyWith(day: DateTime.now().day + 15)));
+
+    final returnDateController = TextEditingController(
+        text: dateFormat.format(
+            ref.watch(homeScreenNotifierProvider).value?.returnDate ??
+                DateTime.now().copyWith(day: DateTime.now().day + 22)));
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -47,7 +63,26 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                   child: TextField(
                 controller: originTextController,
                 enabled: true,
-                onTap: widget.onSearchOriginTap,
+                canRequestFocus: false,
+                onTap: () async {
+                  await ref
+                      .watch(bottomSheetNotifierProvider.notifier)
+                      .updateBottomSheetContent(BottomSheetContent(
+                        controller: originTextController,
+                      ));
+
+                  showModalBottomSheet(
+                      context: context,
+                      showDragHandle: true,
+                      enableDrag: true,
+                      builder: (_) => const SearchBottomSheet(
+                            tag: originTag,
+                          ));
+
+                  originFocusNode.canRequestFocus
+                      ? originFocusNode.requestFocus()
+                      : () {};
+                },
                 decoration: InputDecoration(
                   label: Row(
                     children: [
@@ -68,8 +103,28 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
               Expanded(
                   child: TextField(
                 controller: destinationTextController,
-                enabled: true,
-                onTap: widget.onSearchDestinationTap,
+                canRequestFocus: false,
+                readOnly: true,
+                onTap: () async {
+                  await ref
+                      .read(bottomSheetNotifierProvider.notifier)
+                      .updateBottomSheetContent(BottomSheetContent(
+                        controller: destinationTextController,
+                      ));
+
+                  if (context.mounted) {
+                    showBottomSheet(
+                        context: context,
+                        showDragHandle: true,
+                        enableDrag: true,
+                        builder: (_) => const SearchBottomSheet(
+                              tag: destinationTag,
+                            ));
+                  }
+                  destinationFocusNode.canRequestFocus
+                      ? destinationFocusNode.requestFocus()
+                      : () {};
+                },
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -94,28 +149,40 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
               Expanded(
                   flex: 3,
                   child: TextField(
+                    controller: departureDateController,
+                    canRequestFocus: false,
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Departure Date',
                       label: Text('Departure Date'),
                     ),
-                    onTap: () {
-                      showDatePicker(
-                          context: context,
-                          firstDate: DateTime.now().copyWith(
-                            day: DateTime.now().day - 15,
-                          ),
-                          lastDate: DateTime.now().copyWith(
-                            day: DateTime.now().year + 2,
-                          ),
-                          initialDate: DateTime.now().copyWith(
-                            day: DateTime.now().day + 15,
-                          )).then((value) {
+                    onTap: () async {
+                      await showDatePicker(
+                              context: context,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime.now().copyWith(
+                                day: DateTime.now().year + 2,
+                              ),
+                              initialDate: ref
+                                      .watch(homeScreenNotifierProvider)
+                                      .value
+                                      ?.departureDate ??
+                                  DateTime.now().copyWith(
+                                    day: DateTime.now().day + 15,
+                                  ))
+                          .then((value) {
                         debugPrint('Selected date: $value');
+                        ref
+                            .watch(homeScreenNotifierProvider.notifier)
+                            .updateHomeScreenContent(ref
+                                    .watch(homeScreenNotifierProvider)
+                                    .value
+                                    ?.copyWith(
+                                      departureDate: value,
+                                    ) ??
+                                HomeScreenContent.empty());
                       });
-                      // TODO: if departure date is set to before departure date, show error
-                      // TODO: departure date is MANDATORY
                     },
                   )),
               const SizedBox(
@@ -124,10 +191,25 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
               Expanded(
                   flex: 3,
                   child: TextField(
+                    controller: returnDateController,
+                    canRequestFocus: false,
                     onTap: () {
-                      // TODO: Show date picker
-                      // TODO: if return date is set to before departure date, show error
-                      // TODO: if return date is not set do not populate the return date
+                      showDatePicker(
+                              context: context,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime.now().copyWith(
+                                day: DateTime.now().year + 2,
+                              ),
+                              initialDate: ref
+                                      .watch(homeScreenNotifierProvider)
+                                      .value
+                                      ?.returnDate ??
+                                  DateTime.now().copyWith(
+                                    day: DateTime.now().day + 22,
+                                  ))
+                          .then((value) {
+                        debugPrint('Selected date: $value');
+                      });
                     },
                     decoration: const InputDecoration(
                       filled: true,

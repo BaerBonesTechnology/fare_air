@@ -3,9 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../analytics/impl/tracker_impl.dart';
-import '../../presentation/cms/controllers/home_screen_controller.dart';
-import '../../presentation/di/content_providers/content_providers.dart';
-import '../../presentation/di/content_providers/home_content_controller.dart';
 import '../../presentation/di/providers/analytics_provides.dart';
 import '../../presentation/di/providers/core_providers.dart';
 import '../../presentation/di/service_controllers/airport_service_controller.dart';
@@ -42,16 +39,15 @@ class BootstrapperImpl implements Bootstrapper {
                     ref.read(clientProvider),
                     ref.read(sharedPreferencesProvider)),
               )),
-      homeScreenContentProvider
-          .overrideWith((ref) => HomeContentStateController(
-                HomeScreenController(ref),
-              )),
     ]);
 
-    if (useEmulators) {}
     await container.read(locationProvider)?.checkPermissions();
-    await container.read(homeScreenContentProvider)?.initialize();
+    await getInitialAirports(container);
 
     return container;
+  }
+
+  Future getInitialAirports(ProviderContainer container) async {
+    await container.read(airportServiceControllerProvider)?.getAirports();
   }
 }

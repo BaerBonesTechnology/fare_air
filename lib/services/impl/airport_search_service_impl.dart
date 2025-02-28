@@ -4,7 +4,6 @@ import 'package:fare_air/constants/defaults.dart';
 import 'package:fare_air/constants/environment_constants.dart';
 import 'package:fare_air/models/airport_query_response.dart';
 import 'package:fare_air/models/airport_search_params.dart';
-import 'package:fare_air/models/current_airport_data.dart';
 import 'package:fare_air/services/airport_search_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,9 +25,9 @@ class AirportSearchServiceImpl implements AirportSearchService {
       {bool checkCache = true}) async {
     // I want to first check if the location service is enabled
     try {
-      if (getCachedAirportResponse() != null && checkCache) {
-        if (getCachedAirportResponse()?.data?.current != null) {
-          return AsyncData(getCachedAirportResponse());
+      if (_getCachedAirportResponse() != null && checkCache) {
+        if (_getCachedAirportResponse()?.data?.current != null) {
+          return AsyncData(_getCachedAirportResponse());
         }
       }
 
@@ -71,7 +70,7 @@ class AirportSearchServiceImpl implements AirportSearchService {
       });
 
       if (nearbyAirports is AsyncData) {
-        cacheAirportResponse(nearbyAirports.value);
+        _cacheAirportResponse(nearbyAirports.value);
       }
 
       return nearbyAirports;
@@ -88,15 +87,13 @@ class AirportSearchServiceImpl implements AirportSearchService {
     return AsyncError(Exception('Something went wrong'), StackTrace.current);
   }
 
-  @override
-  void cacheAirportResponse(response) async {
+  void _cacheAirportResponse(response) async {
     // I want to cache the response
     _sharedPreferences?.setString(
         nearbyAirportKey, jsonEncode(response?.toJson().toString() ?? ''));
   }
 
-  @override
-  NearbyAirportResponse? getCachedAirportResponse() {
+  NearbyAirportResponse? _getCachedAirportResponse() {
     // I want to get the cached response
     final response = _sharedPreferences?.getString(nearbyAirportKey);
 
@@ -107,14 +104,21 @@ class AirportSearchServiceImpl implements AirportSearchService {
   }
 
   @override
-  Future<AsyncValue<AirportData?>> getAirportDetails(String id) {
-    // TODO: implement getAirportDetails
-    throw UnimplementedError();
-  }
+  Future<AsyncData<AirportQueryResponse>> searchForAirport(String query) async {
+    final content = AsyncData(AirportQueryResponse.empty());
 
-  @override
-  Future<AsyncValue<AirportQueryResponse?>> searchForAirport(String query) {
-    // TODO: implement searchForAirport
-    throw UnimplementedError();
+    await _clientService
+        ?.get(
+      query,
+      rapidApiHeaders,
+    )
+        .then((value) {
+      if (value.isNotEmpty) {
+        final response = AirportQueryResponse.fromJson(value);
+        content.value.data.addAll(response.data);
+      }
+    });
+
+    return content;
   }
 }

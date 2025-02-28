@@ -20,11 +20,23 @@ class AirportQueryResponse {
 
   Map<String, dynamic> toJson() => _$AirportQueryResponseToJson(this);
 
-  static AirportQueryResponse? empty() {
+  static AirportQueryResponse empty() {
     return AirportQueryResponse(
       status: false,
       timestamp: 0,
       data: [],
+    );
+  }
+
+  AirportQueryResponse copyWith({
+    bool? status,
+    int? timestamp,
+    List<AirportData>? data,
+  }) {
+    return AirportQueryResponse(
+      status: status ?? this.status,
+      timestamp: timestamp ?? this.timestamp,
+      data: data ?? this.data,
     );
   }
 }

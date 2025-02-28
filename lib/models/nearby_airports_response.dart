@@ -27,4 +27,16 @@ class NearbyAirportResponse {
         timestamp: 0,
         data: AirportDataGroups(current: null, nearby: [], recent: []));
   }
+
+  NearbyAirportResponse copyWith({
+    bool? status,
+    int? timestamp,
+    AirportDataGroups? data,
+  }) {
+    return NearbyAirportResponse(
+      status: status ?? this.status,
+      timestamp: timestamp ?? this.timestamp,
+      data: data ?? this.data,
+    );
+  }
 }

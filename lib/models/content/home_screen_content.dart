@@ -1,44 +1,46 @@
-import 'package:flutter/cupertino.dart';
-
-import '../current_airport_data.dart';
+import '../itinerary.dart';
 
 class HomeScreenContent {
   HomeScreenContent({
-    this.header,
-    this.userImage,
+    this.header = "Welcome to Fare Air",
     this.initialSearchLocation,
-    this.centerHeader = false,
-    this.bottomSheetHeight = const Offset(0, 500),
-    this.bottomSheet,
+    this.initialEntityId,
+    this.departureDate,
+    this.returnDate,
+    this.departureSearchLocation,
+    this.departureEntityId,
     this.searchResults = const [],
   });
 
   final String? header;
-  final String? userImage;
   final String? initialSearchLocation;
-  final bool centerHeader;
-  final Offset bottomSheetHeight;
-  final Widget? bottomSheet;
-  final List<AirportData?> searchResults;
+  final String? initialEntityId;
+  final List<Itinerary?> searchResults;
+  final DateTime? departureDate;
+  final DateTime? returnDate;
+  final String? departureSearchLocation;
+  final String? departureEntityId;
 
   HomeScreenContent copyWith({
     String? header,
-    String? userImage,
     String? initialSearchLocation,
-    bool? centerHeader,
-    double? bottomSheetHeight,
-    Widget? bottomSheet,
-    List<AirportData?>? searchResults,
+    String? initialEntityId,
+    List<Itinerary?>? searchResults,
+    DateTime? departureDate,
+    DateTime? returnDate,
+    String? departureSearchLocation,
+    String? departureEntityId,
   }) {
     return HomeScreenContent(
       header: header ?? this.header,
-      userImage: userImage ?? this.userImage,
       initialSearchLocation:
           initialSearchLocation ?? this.initialSearchLocation,
-      centerHeader: centerHeader ?? this.centerHeader,
-      bottomSheetHeight:
-          Offset(0, bottomSheetHeight ?? this.bottomSheetHeight.dy),
-      bottomSheet: bottomSheet ?? this.bottomSheet,
+      initialEntityId: initialEntityId ?? this.initialEntityId,
+      departureDate: departureDate ?? this.departureDate,
+      returnDate: returnDate ?? this.returnDate,
+      departureSearchLocation:
+          departureSearchLocation ?? this.departureSearchLocation,
+      departureEntityId: departureEntityId ?? this.departureEntityId,
       searchResults: searchResults ?? this.searchResults,
     );
   }
@@ -47,12 +49,19 @@ class HomeScreenContent {
   String toString() {
     return {
       'header': header,
-      'userImage': userImage,
       'initialSearchLocation': initialSearchLocation,
-      'centerHeader': centerHeader,
-      'bottomSheetHeight': bottomSheetHeight,
-      'bottomSheet': bottomSheet,
+      'departureDate': departureDate,
+      'returnDate': returnDate,
+      'departureSearchLocation': departureSearchLocation,
       'searchResults': searchResults,
     }.toString();
+  }
+
+  static empty() {
+    return HomeScreenContent(
+      header: "Welcome to Fare Air",
+      initialSearchLocation: "",
+      searchResults: [],
+    );
   }
 }

@@ -32,7 +32,7 @@ class FlightSearchParameters {
     this.adultsCount = 1,
     this.childrenCount,
     this.infantsCount,
-    this.limit,
+    this.limit = 10,
     this.carriersIds,
     this.sortBy,
     this.market = const Locale('en-US'),
