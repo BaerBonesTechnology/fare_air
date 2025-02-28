@@ -42,12 +42,7 @@ class BootstrapperImpl implements Bootstrapper {
     ]);
 
     await container.read(locationProvider)?.checkPermissions();
-    await getInitialAirports(container);
 
     return container;
-  }
-
-  Future getInitialAirports(ProviderContainer container) async {
-    await container.read(airportServiceControllerProvider)?.getAirports();
   }
 }

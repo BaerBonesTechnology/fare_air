@@ -39,4 +39,13 @@ class NearbyAirportResponse {
       data: data ?? this.data,
     );
   }
+
+  @override
+  String toString() {
+    return {
+      'status': status,
+      'timestamp': timestamp,
+      'data': data,
+    }.toString();
+  }
 }

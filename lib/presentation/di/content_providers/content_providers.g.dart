@@ -57,23 +57,5 @@ final airportQueryNotifierProvider = AutoDisposeAsyncNotifierProvider<
 );
 
 typedef _$AirportQueryNotifier = AutoDisposeAsyncNotifier<AirportQueryResponse>;
-String _$nearbyAirportNotifierHash() =>
-    r'68d90fe0760ec6c85559fa4bd12d0e7564b3eaed';
-
-/// See also [NearbyAirportNotifier].
-@ProviderFor(NearbyAirportNotifier)
-final nearbyAirportNotifierProvider = AutoDisposeAsyncNotifierProvider<
-    NearbyAirportNotifier, NearbyAirportResponse>.internal(
-  NearbyAirportNotifier.new,
-  name: r'nearbyAirportNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$nearbyAirportNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$NearbyAirportNotifier
-    = AutoDisposeAsyncNotifier<NearbyAirportResponse>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

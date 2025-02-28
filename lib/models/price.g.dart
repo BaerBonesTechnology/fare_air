@@ -7,8 +7,8 @@ part of 'price.dart';
 // **************************************************************************
 
 Price _$PriceFromJson(Map<String, dynamic> json) => Price(
-      raw: (json['raw'] as num).toDouble(),
-      formatted: json['formatted'] as String,
+      raw: (json['raw'] as num?)?.toDouble(),
+      formatted: json['formatted'] as String?,
     );
 
 Map<String, dynamic> _$PriceToJson(Price instance) => <String, dynamic>{

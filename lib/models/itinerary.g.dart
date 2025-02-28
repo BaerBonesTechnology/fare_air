@@ -7,10 +7,13 @@ part of 'itinerary.dart';
 // **************************************************************************
 
 Itinerary _$ItineraryFromJson(Map<String, dynamic> json) => Itinerary(
-      price: Price.fromJson(json['price'] as Map<String, dynamic>),
-      legs: (json['legs'] as List<dynamic>)
-          .map((e) => Leg.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      price: json['price'] == null
+          ? null
+          : Price.fromJson(json['price'] as Map<String, dynamic>),
+      legs: (json['legs'] as List<dynamic>?)
+              ?.map((e) => Leg.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$ItineraryToJson(Itinerary instance) => <String, dynamic>{

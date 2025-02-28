@@ -5,12 +5,12 @@ part 'price.g.dart';
 @JsonSerializable()
 class Price {
   Price({
-    required this.raw,
-    required this.formatted,
+    this.raw,
+    this.formatted,
   });
 
-  double raw;
-  String formatted;
+  double? raw;
+  String? formatted;
 
   factory Price.fromJson(Map<String, dynamic> json) => _$PriceFromJson(json);
 

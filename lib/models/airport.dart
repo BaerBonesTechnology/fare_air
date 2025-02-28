@@ -5,20 +5,20 @@ part 'airport.g.dart';
 @JsonSerializable()
 class Airport {
   Airport({
-    required this.id,
-    required this.entityId,
-    required this.displayCode,
-    required this.city,
-    required this.country,
-    required this.isHighlighted,
+    this.id,
+    this.entityId,
+    this.displayCode,
+    this.city,
+    this.country,
+    this.isHighlighted,
   });
 
-  String id;
-  String entityId;
-  String displayCode;
-  String city;
-  String country;
-  bool isHighlighted;
+  String? id;
+  String? entityId;
+  String? displayCode;
+  String? city;
+  String? country;
+  bool? isHighlighted;
 
   factory Airport.fromJson(Map<String, dynamic> json) =>
       _$AirportFromJson(json);

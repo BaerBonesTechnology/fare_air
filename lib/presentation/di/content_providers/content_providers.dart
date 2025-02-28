@@ -1,6 +1,6 @@
-import 'package:fare_air/models/airport_data_groups.dart';
 import 'package:fare_air/models/nearby_airports_response.dart';
 import 'package:fare_air/presentation/di/providers/core_providers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -79,24 +79,5 @@ class AirportQueryNotifier extends _$AirportQueryNotifier {
 
   startLoading() {
     state = const AsyncLoading();
-  }
-}
-
-@riverpod
-class NearbyAirportNotifier extends _$NearbyAirportNotifier {
-  @override
-  Future<NearbyAirportResponse> build() async {
-    return NearbyAirportResponse(
-      data: AirportDataGroups(
-        nearby: [],
-      ),
-      status: false,
-      timestamp: 0,
-    );
-  }
-
-  Future<void> updateNearbyAirports(
-      AsyncValue<NearbyAirportResponse> content) async {
-    state = content;
   }
 }

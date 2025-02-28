@@ -7,12 +7,12 @@ part of 'airport.dart';
 // **************************************************************************
 
 Airport _$AirportFromJson(Map<String, dynamic> json) => Airport(
-      id: json['id'] as String,
-      entityId: json['entityId'] as String,
-      displayCode: json['displayCode'] as String,
-      city: json['city'] as String,
-      country: json['country'] as String,
-      isHighlighted: json['isHighlighted'] as bool,
+      id: json['id'] as String?,
+      entityId: json['entityId'] as String?,
+      displayCode: json['displayCode'] as String?,
+      city: json['city'] as String?,
+      country: json['country'] as String?,
+      isHighlighted: json['isHighlighted'] as bool?,
     );
 
 Map<String, dynamic> _$AirportToJson(Airport instance) => <String, dynamic>{

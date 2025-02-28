@@ -8,11 +8,11 @@ part 'itinerary.g.dart';
 @JsonSerializable()
 class Itinerary {
   Itinerary({
-    required this.price,
-    required this.legs,
+    this.price,
+    this.legs = const [],
   });
 
-  Price price;
+  Price? price;
   List<Leg> legs;
 
   factory Itinerary.fromJson(Map<String, dynamic> json) =>

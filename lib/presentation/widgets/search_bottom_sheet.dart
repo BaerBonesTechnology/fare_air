@@ -26,6 +26,9 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
     return Column(
       children: [
         TextField(
+          onTapOutside: (pointer) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           focusNode: ref.watch(bottomSheetNotifierProvider).value?.focusNode,
           decoration: const InputDecoration(
             hintText: 'Search for an airport',
@@ -88,7 +91,7 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
                 return ListTile(
                   title: Text(airport?.localizedName ?? ''),
                   subtitle: Text(airport?.skyId ?? ''),
-                  onTap: () {
+                  onTap: () async {
                     ref
                         .read(homeScreenNotifierProvider.notifier)
                         .updateHomeScreenContent(widget.tag == originTag
@@ -98,6 +101,7 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
                                     ?.copyWith(
                                       initialSearchLocation:
                                           airport?.skyId ?? '',
+                                      initialEntityId: airport?.entityId ?? '',
                                     ) ??
                                 HomeScreenContent.empty()
                             : ref
@@ -106,13 +110,11 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
                                     ?.copyWith(
                                       departureSearchLocation:
                                           airport?.skyId ?? '',
+                                      departureEntityId:
+                                          airport?.entityId ?? '',
                                     ) ??
                                 HomeScreenContent.empty());
-                    ref
-                        .read(bottomSheetNotifierProvider)
-                        .value
-                        ?.focusNode
-                        ?.unfocus();
+
                     ref
                         .read(bottomSheetNotifierProvider.notifier)
                         .updateBottomSheetContent(

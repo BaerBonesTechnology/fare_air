@@ -19,4 +19,13 @@ class AirportDataGroups {
       _$AirportDataGroupsFromJson(json);
 
   Map<String, dynamic> toJson() => _$AirportDataGroupsToJson(this);
+
+  @override
+  String toString() {
+    return {
+      'current': current,
+      'nearby': nearby,
+      'recent': recent,
+    }.toString();
+  }
 }

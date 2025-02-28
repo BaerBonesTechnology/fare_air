@@ -4,6 +4,8 @@ import 'package:fare_air/constants/defaults.dart';
 import 'package:fare_air/constants/environment_constants.dart';
 import 'package:fare_air/models/airport_query_response.dart';
 import 'package:fare_air/models/airport_search_params.dart';
+import 'package:fare_air/models/flight_search_params.dart';
+import 'package:fare_air/models/flight_search_response.dart';
 import 'package:fare_air/services/airport_search_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -119,6 +121,27 @@ class AirportSearchServiceImpl implements AirportSearchService {
       }
     });
 
+    return content;
+  }
+
+  @override
+  Future<AsyncValue<FlightSearchResponse?>> searchForFlights(
+      FlightSearchParameters params) async {
+    AsyncValue<FlightSearchResponse?> content = const AsyncLoading();
+
+    await _clientService
+        ?.get(
+      params.buildUrl(),
+      rapidApiHeaders,
+    )
+        .then((value) {
+      if (value.isNotEmpty) {
+        final response = FlightSearchResponse.fromJson(value);
+        content = AsyncData(response);
+      }
+    }, onError: (e) {
+      content = AsyncError(e, StackTrace.current);
+    });
     return content;
   }
 }

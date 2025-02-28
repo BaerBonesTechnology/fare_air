@@ -12,12 +12,20 @@ class FlightSearchResponse {
     required this.data,
   });
 
-  bool status;
-  int timestamp;
-  FlightSearchData data;
+  bool? status;
+  int? timestamp;
+  FlightSearchData? data;
 
   factory FlightSearchResponse.fromJson(Map<String, dynamic> json) =>
       _$FlightSearchResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$FlightSearchResponseToJson(this);
+
+  static FlightSearchResponse? empty() {
+    return FlightSearchResponse(
+      status: false,
+      timestamp: 0,
+      data: FlightSearchData.empty(),
+    );
+  }
 }

@@ -14,4 +14,8 @@ class FlightSearchData {
 
   factory FlightSearchData.fromJson(Map<String, dynamic> json) =>
       _$FlightSearchDataFromJson(json);
+
+  static empty() {
+    return FlightSearchData(itineraries: []);
+  }
 }

@@ -1,8 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:fare_air/constants/defaults.dart';
-import 'package:fare_air/models/content/bottom_sheet_content.dart';
-import 'package:fare_air/presentation/widgets/search_bottom_sheet.dart';
+import 'package:fare_air/presentation/controllers/home_state_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +12,10 @@ import '../di/content_providers/content_providers.dart';
 class TripSearchInputWidget extends ConsumerStatefulWidget {
   const TripSearchInputWidget({
     super.key,
+    required this.controller,
   });
+
+  final HomeStateController controller;
 
   @override
   ConsumerState createState() => _SearchInputWidgetState();
@@ -23,10 +25,8 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-
     final FocusNode originFocusNode = FocusNode();
     final FocusNode destinationFocusNode = FocusNode();
-
     final originTextController = TextEditingController(
         text: ref
                 .watch(homeScreenNotifierProvider)
@@ -42,14 +42,16 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
     final departureDateController = TextEditingController(
         text: dateFormat.format(
             ref.watch(homeScreenNotifierProvider).value?.departureDate ??
-                DateTime.now().copyWith(day: DateTime.now().day + 15)));
-
+                DateTime.now()));
     final returnDateController = TextEditingController(
-        text: dateFormat.format(
-            ref.watch(homeScreenNotifierProvider).value?.returnDate ??
-                DateTime.now().copyWith(day: DateTime.now().day + 22)));
+        text: ref.watch(homeScreenNotifierProvider).value?.returnDate != null
+            ? dateFormat.format(
+                ref.watch(homeScreenNotifierProvider).value?.returnDate ??
+                    DateTime.now())
+            : '');
 
     return Container(
+      height: MediaQuery.of(context).size.height * 0.25,
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         color: Colors.lightGreen,
@@ -65,20 +67,7 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                 enabled: true,
                 canRequestFocus: false,
                 onTap: () async {
-                  await ref
-                      .watch(bottomSheetNotifierProvider.notifier)
-                      .updateBottomSheetContent(BottomSheetContent(
-                        controller: originTextController,
-                      ));
-
-                  showModalBottomSheet(
-                      context: context,
-                      showDragHandle: true,
-                      enableDrag: true,
-                      builder: (_) => const SearchBottomSheet(
-                            tag: originTag,
-                          ));
-
+                  widget.controller.openBottomSheet(context, ref, originTag);
                   originFocusNode.canRequestFocus
                       ? originFocusNode.requestFocus()
                       : () {};
@@ -105,26 +94,8 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                 controller: destinationTextController,
                 canRequestFocus: false,
                 readOnly: true,
-                onTap: () async {
-                  await ref
-                      .read(bottomSheetNotifierProvider.notifier)
-                      .updateBottomSheetContent(BottomSheetContent(
-                        controller: destinationTextController,
-                      ));
-
-                  if (context.mounted) {
-                    showBottomSheet(
-                        context: context,
-                        showDragHandle: true,
-                        enableDrag: true,
-                        builder: (_) => const SearchBottomSheet(
-                              tag: destinationTag,
-                            ));
-                  }
-                  destinationFocusNode.canRequestFocus
-                      ? destinationFocusNode.requestFocus()
-                      : () {};
-                },
+                onTap: () => widget.controller
+                    .openBottomSheet(context, ref, destinationTag),
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -139,7 +110,7 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                     )),
               ))
             ],
-          ),
+          ), // Location Row
           const SizedBox(
             height: 10,
           ),
@@ -195,6 +166,13 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                     canRequestFocus: false,
                     onTap: () {
                       showDatePicker(
+                              selectableDayPredicate: (day) {
+                                return day.isAfter(ref
+                                        .watch(homeScreenNotifierProvider)
+                                        .value
+                                        ?.departureDate ??
+                                    DateTime.now());
+                              },
                               context: context,
                               firstDate: DateTime.now(),
                               lastDate: DateTime.now().copyWith(
@@ -209,6 +187,16 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                                   ))
                           .then((value) {
                         debugPrint('Selected date: $value');
+
+                        ref
+                            .watch(homeScreenNotifierProvider.notifier)
+                            .updateHomeScreenContent(ref
+                                    .watch(homeScreenNotifierProvider)
+                                    .value
+                                    ?.copyWith(
+                                      returnDate: value,
+                                    ) ??
+                                HomeScreenContent.empty());
                       });
                     },
                     decoration: const InputDecoration(
@@ -219,7 +207,7 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                     ),
                   )),
             ],
-          ),
+          ), // Date Row
           const SizedBox(
             height: 10,
           ),
@@ -229,24 +217,24 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
               Expanded(
                 flex: 1,
                 child: DropdownMenu(
-                  label: const Text('Adults'),
-                  initialSelection: 1,
-                  dropdownMenuEntries: List.generate(10, (index) {
-                    return DropdownMenuEntry(
-                      value: index,
-                      label: index.toString(),
-                    );
-                  }),
-                ),
+                    label: const Text('Adults'),
+                    initialSelection: 1,
+                    dropdownMenuEntries: List.generate(10, (index) {
+                      return DropdownMenuEntry(
+                        value: index,
+                        label: index.toString(),
+                      );
+                    }),
+                    onSelected: (value) async => await widget.controller
+                        .updateAdultsCount(ref, value ?? 0)),
               ),
               Expanded(
                 flex: 1,
                 child: DropdownMenu(
                   label: const Text('Children'),
                   initialSelection: 0,
-                  onSelected: (value) {
-                    debugPrint('Selected $value');
-                  },
+                  onSelected: (value) async => await widget.controller
+                      .updateChildrenCount(ref, value ?? 0),
                   dropdownMenuEntries: List.generate(10, (index) {
                     return DropdownMenuEntry(
                       value: index,
@@ -258,14 +246,13 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
               Expanded(
                 flex: 3,
                 child: ElevatedButton(
-                  onPressed: () {
-                    debugPrint('Search button pressed');
-                  },
+                  onPressed: () async =>
+                      await widget.controller.searchForFlights(ref),
                   child: const Text('Search'),
                 ),
               )
             ],
-          )
+          ) // Passenger and Search Button Row
         ],
       ),
     );
