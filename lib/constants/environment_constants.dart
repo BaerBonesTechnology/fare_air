@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:fare_air/constants/endpoints.dart';
 
-import '../config/model/config_model.dart';
+import '../models/config/config_model.dart';
 import 'defaults.dart';
 
 final ConfigModel _configuration = ConfigModel.fromJson(

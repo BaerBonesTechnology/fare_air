@@ -24,6 +24,8 @@ class TripSearchInputWidget extends ConsumerStatefulWidget {
 class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
   @override
   Widget build(BuildContext context) {
+    final homeScreenContent = ref.watch(homeScreenNotifierProvider);
+
     final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
     final originTextController = TextEditingController(
         text: ref
@@ -38,18 +40,15 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                 ?.departureSearchLocation ??
             '');
     final departureDateController = TextEditingController(
-        text: dateFormat.format(
-            ref.watch(homeScreenNotifierProvider).value?.departureDate ??
-                DateTime.now()));
+        text: dateFormat
+            .format(homeScreenContent.value?.departureDate ?? DateTime.now()));
     final returnDateController = TextEditingController(
-        text: ref.watch(homeScreenNotifierProvider).value?.returnDate != null
-            ? dateFormat.format(
-                ref.watch(homeScreenNotifierProvider).value?.returnDate ??
-                    DateTime.now())
+        text: homeScreenContent.value?.returnDate != null
+            ? dateFormat
+                .format(homeScreenContent.value?.returnDate ?? DateTime.now())
             : '');
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.25,
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         color: Colors.lightGreen,
@@ -139,7 +138,7 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                           .then((value) {
                         debugPrint('Selected date: $value');
                         ref
-                            .watch(homeScreenNotifierProvider.notifier)
+                            .read(homeScreenNotifierProvider.notifier)
                             .updateHomeScreenContent(ref
                                     .watch(homeScreenNotifierProvider)
                                     .value
@@ -183,7 +182,7 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                         debugPrint('Selected date: $value');
 
                         ref
-                            .watch(homeScreenNotifierProvider.notifier)
+                            .read(homeScreenNotifierProvider.notifier)
                             .updateHomeScreenContent(ref
                                     .watch(homeScreenNotifierProvider)
                                     .value

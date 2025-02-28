@@ -47,21 +47,26 @@ class HomeScreenNotifier extends _$HomeScreenNotifier {
     state = const AsyncLoading();
 
     if (content != null) {
-      await ref
+      final flightData = await ref
           .read(airportServiceControllerProvider)
-          ?.searchForFlights(query)
-          .then((value) {
-        if (value is AsyncData) {
+          ?.searchForFlights(query);
+
+      switch (flightData) {
+        case AsyncLoading _:
+          break;
+        case AsyncData data:
           // Parse into FlightSearchResponse
-          final response = value.value;
-          content = content?.copyWith(
+          final response = data.value;
+          content = content.copyWith(
               searchResults: (response?.data?.itineraries ?? []).isEmpty
-                  ? content?.searchResults ?? []
+                  ? content.searchResults ?? []
                   : response?.data?.itineraries ?? []);
-        }
-      });
-      await updateHomeScreenContent(content ?? HomeScreenContent.empty());
+        case AsyncError error:
+          state = AsyncError(error.error, error.stackTrace);
+          return;
+      }
     }
+    await updateHomeScreenContent(content ?? HomeScreenContent.empty());
   }
 }
 
@@ -84,20 +89,25 @@ class AirportQueryNotifier extends _$AirportQueryNotifier {
     );
 
     if (content != null) {
-      await ref
+      final airportData = await ref
           .read(airportServiceControllerProvider)
-          ?.searchForAirport(query)
-          .then((value) {
-        if (value is AsyncData) {
-          // Parse into AirportQueryResponse
+          ?.searchForAirport(query);
+
+      switch (airportData) {
+        case AsyncLoading _:
+          break;
+        case AsyncData value:
           final response = value.value;
-          content = content?.copyWith(
+          content = content.copyWith(
               data: (response?.data ?? []).isEmpty
-                  ? content?.data
+                  ? content.data
                   : (response?.data ?? []));
-        }
-      });
-      state = AsyncData(content ?? AirportQueryResponse.empty());
+          break;
+        case AsyncError error:
+          state = AsyncError(error.error, error.stackTrace);
+          return;
+      }
+      state = AsyncData(content);
     }
   }
 

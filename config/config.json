@@ -6,23 +6,6 @@
       "\"version\"": "\"0.0.1\"",
       "\"description\"": "\"\"",
       "\"author\"": "\"Baerhous\"",
-      "\"rapidApiKey\"": "\"76d626a29emsh5128ec348c17c4cp1208e5jsn7fbe474eb8c0\"",
-      "\"firebaseConfig\"": {
-        "\"androidConfig\"": {
-          "\"apiKey\"": "\"AIzaSyArBTcuusvpdrD2zRxcU0sRCrsJrMM6d_Y\"",
-          "\"appId\"": "\"1:91076351245:android:c4b1b24e349cac6b474c44\"",
-          "\"messagingSenderId\"": "\"91076351245\"",
-          "\"projectId\"": "\"fair-air-7503c\"",
-          "\"storageBucket\"": "\"fair-air-7503c.firebasestorage.app\""
-        },
-        "\"iosConfig\"": {
-          "\"apiKey\"": "\"AIzaSyDTQ4gMGUx0zkW43rFxsv-3JcFl2upCPEE\"",
-          "\"appId\"": "\"1:91076351245:ios:046023afbcd4c2be474c44\"",
-          "\"messagingSenderId\"": "\"91076351245\"",
-          "\"projectId\"": "\"fair-air-7503c\"",
-          "\"storageBucket\"": "\"fair-air-7503c.firebasestorage.app\"",
-          "\"iosBundleId\"": "\"com.baerhous.fareAir\""
-        }
-      }
+      "\"rapidApiKey\"": "\"76d626a29emsh5128ec348c17c4cp1208e5jsn7fbe474eb8c0\""
     }
   }}

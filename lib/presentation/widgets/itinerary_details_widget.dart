@@ -17,9 +17,23 @@ class ItineraryDetailsWidget extends StatelessWidget {
           : MediaQuery.sizeOf(context).width,
       padding: const EdgeInsets.all(8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Center(child: Text('Itinerary Details')),
+          RichText(
+              text: TextSpan(
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+            text: 'From ${itinerary.legs.first.origin?.displayCode}',
+            children: itinerary.legs
+                .map((leg) => TextSpan(
+                      text: ' > ${leg.destination?.displayCode}',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ))
+                .toList(),
+          )),
           Center(
             child:
                 itinerary.legs.first.carriers?.marketing.first.logoUrl != null
@@ -30,26 +44,14 @@ class ItineraryDetailsWidget extends StatelessWidget {
                       )
                     : null,
           ),
-          RichText(
-              text: TextSpan(
-            style: const TextStyle(
-              color: Colors.black,
+          const Center(
+            child: Text(
+              'Itinerary Details',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            text: 'From ${itinerary.legs.first.origin?.displayCode}',
-            children: itinerary.legs
-                .map((leg) => TextSpan(
-                      text: ' -> ${leg.destination?.displayCode}',
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ))
-                .toList(),
-          )),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text('Price: ${itinerary.price?.formatted}'),
-            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,6 +89,28 @@ class ItineraryDetailsWidget extends StatelessWidget {
                 );
               },
             ),
+          ),
+          const Spacer(),
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Price per Ticket:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${itinerary.price?.formatted ?? 0}',
+                  style: const TextStyle(color: Colors.white, fontSize: 32),
+                ),
+              )
+            ],
           ),
         ],
       ),

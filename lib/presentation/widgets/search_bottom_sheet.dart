@@ -22,49 +22,83 @@ class SearchBottomSheet extends ConsumerStatefulWidget {
 
 class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final FocusNode? node =
+          ref.read(bottomSheetNotifierProvider).value?.focusNode;
+      node?.canRequestFocus == true ? node?.requestFocus() : {};
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final bottomSheetContent = ref.watch(bottomSheetNotifierProvider);
+    final FocusNode? node = bottomSheetContent.value?.focusNode;
+
     return Column(
       children: [
         TextField(
-          onTapOutside: (pointer) {
-            FocusManager.instance.primaryFocus?.unfocus();
-          },
-          focusNode: ref.watch(bottomSheetNotifierProvider).value?.focusNode,
-          decoration: const InputDecoration(
-            hintText: 'Search for an airport',
-          ),
-          onChanged: (value) async {
-            // Do something with the value
-            bool readyToSearch = false;
-            await Future.delayed(const Duration(seconds: 1), () {
-              readyToSearch = true;
-            });
+            onTapOutside: (pointer) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            focusNode: node,
+            decoration: const InputDecoration(
+              hintText: 'Search for an airport',
+            ),
+            onChanged: (value) async {
+              // Do something with the value
+              bool readyToSearch = false;
+              await Future.delayed(const Duration(seconds: 1), () {
+                readyToSearch = true;
+              });
 
-            if (!readyToSearch) {
-              return;
-            }
-            ref.read(airportQueryNotifierProvider.notifier).startLoading();
+              if (!readyToSearch) {
+                return;
+              }
+              ref.read(airportQueryNotifierProvider.notifier).startLoading();
 
-            final query = AirportSearchParams.buildQueryUrl(value);
-            await ref
-                .read(airportQueryNotifierProvider.notifier)
-                .updateAirportQuery(ref, query);
-
-            if (ref.watch(bottomSheetNotifierProvider).value != null) {
+              final query = AirportSearchParams.buildQueryUrl(value);
               await ref
-                  .read(bottomSheetNotifierProvider.notifier)
-                  .updateBottomSheetContent(ref
-                          .watch(bottomSheetNotifierProvider)
-                          .value
-                          ?.copyWith(
-                              searchResults: ref
-                                  .watch(airportQueryNotifierProvider)
-                                  .value
-                                  ?.data) ??
-                      ref.watch(bottomSheetNotifierProvider).value!);
-            }
-          },
-        ),
+                  .read(airportQueryNotifierProvider.notifier)
+                  .updateAirportQuery(ref, query);
+
+              switch (ref.watch(airportQueryNotifierProvider)) {
+                case AsyncLoading _:
+                  break;
+                case AsyncData data:
+                  await ref
+                      .read(bottomSheetNotifierProvider.notifier)
+                      .updateBottomSheetContent(ref
+                              .watch(bottomSheetNotifierProvider)
+                              .value
+                              ?.copyWith(searchResults: data.value?.data) ??
+                          bottomSheetContent.value!);
+                  break;
+                case AsyncError _:
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (modalContext) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content: const Text('Error loading search results'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(modalContext);
+                                },
+                                child: const Text('Close'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  });
+              }
+            }),
         const Divider(),
         SizedBox(height: 394.0, child: buildSearchResults(context)),
       ],
@@ -76,6 +110,23 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
       case AsyncLoading _:
         return const Center(child: CircularProgressIndicator());
       case AsyncError _:
+        WidgetsBinding.instance.addPostFrameCallback((_) => showDialog(
+              context: context,
+              builder: (modalContext) {
+                return AlertDialog(
+                  title: const Text('Error'),
+                  content: const Text('Error loading search results'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Close'),
+                    ),
+                  ],
+                );
+              },
+            ));
         return const Center(child: Text('Error loading search results'));
       case AsyncData<AirportQueryResponse> results:
         return SingleChildScrollView(
@@ -85,7 +136,7 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
             padding: const EdgeInsets.all(8),
             child: ListView.builder(
               itemCount: results.value.data.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (modalContext, index) {
                 final airport =
                     results.value.data[index].navigation?.relevantFlightParams;
                 return ListTile(
@@ -128,7 +179,7 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
                               BottomSheetContent.empty(),
                         );
 
-                    Navigator.pop(context);
+                    Navigator.pop(modalContext);
                   },
                 );
               },

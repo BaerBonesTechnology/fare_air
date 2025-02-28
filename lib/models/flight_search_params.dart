@@ -5,22 +5,6 @@ import 'package:intl/intl.dart';
 import '../constants/endpoints.dart';
 
 class FlightSearchParameters {
-  final String originSkyId;
-  final String destinationSkyId;
-  final String originEntityId;
-  final String destinationEntityId;
-  final DateTime departureDate;
-  final DateTime? returnDate;
-  final String? cabinClass;
-  final int adultsCount;
-  final int? childrenCount;
-  final int? infantsCount;
-  final int? limit;
-  final String? carriersIds;
-  final String? sortBy;
-  final Locale? market;
-  final String? countryCode;
-
   FlightSearchParameters({
     required this.originSkyId,
     required this.destinationSkyId,
@@ -38,6 +22,22 @@ class FlightSearchParameters {
     this.market = const Locale('en-US'),
     this.countryCode = 'US',
   });
+
+  final String originSkyId;
+  final String destinationSkyId;
+  final String originEntityId;
+  final String destinationEntityId;
+  final DateTime departureDate;
+  final DateTime? returnDate;
+  final String? cabinClass;
+  final int adultsCount;
+  final int? childrenCount;
+  final int? infantsCount;
+  final int? limit;
+  final String? carriersIds;
+  final String? sortBy;
+  final Locale? market;
+  final String? countryCode;
 
   // Method to build the URL string
   String buildUrl() {

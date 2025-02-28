@@ -117,6 +117,8 @@ class AirportSearchServiceImpl implements AirportSearchService {
         final response = AirportQueryResponse.fromJson(value);
         content.value.data.addAll(response.data);
       }
+    }, onError: (e) {
+      return AsyncError(e, StackTrace.current);
     });
 
     return content;

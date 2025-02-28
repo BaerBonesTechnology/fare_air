@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../analytics/impl/tracker_impl.dart';
-import '../../di/providers/analytics_provides.dart';
 import '../../di/providers/core_providers.dart';
 import '../../di/service_controllers/airport_service_controller.dart';
 import '../../di/service_controllers/location_state_controller.dart';
@@ -26,7 +24,6 @@ class BootstrapperImpl implements Bootstrapper {
       // Add provider overrides here
       sharedPreferencesProvider.overrideWith((ref) => prefs),
       clientProvider.overrideWith((ref) => ClientService()),
-      trackerProvider.overrideWith((ref) => TrackerImpl()),
       locationProvider.overrideWith(
         (ref) => LocationStateController(
           LocationServiceImpl(ref.read(sharedPreferencesProvider)),

@@ -19,6 +19,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final HomeStateController controller = HomeStateController();
+    final HomeScreenContent? homeScreenContent =
+        ref.watch(homeScreenNotifierProvider).value;
 
     switch (ref.watch(homeScreenNotifierProvider)) {
       case AsyncData<HomeScreenContent?> data:
@@ -26,20 +28,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ? _buildHomeScreen(ref, context, controller)
             : const Scaffold(body: Center(child: CircularProgressIndicator()));
       case AsyncError _:
-        showDialog(
+        WidgetsBinding.instance.addPostFrameCallback((_) => showDialog(
             context: context,
-            builder: (_) => AlertDialog(
+            builder: (modalContext) => AlertDialog(
                   title: const Text('Error'),
                   content:
                       const Text('An error occurred while loading the content'),
                   actions: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(modalContext);
+                      },
                       child: const Text('OK'),
                     )
                   ],
-                ));
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+                )));
+        return _buildHomeScreen(ref, context, controller);
       default:
         return _buildHomeScreen(ref, context, controller);
     }
@@ -47,14 +51,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildHomeScreen(
       WidgetRef ref, BuildContext context, HomeStateController controller) {
+    final homeScreenContent = ref.watch(homeScreenNotifierProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
         toolbarHeight: 75,
-        title: Image.asset(
-            width: 200,
-            ref.watch(homeScreenNotifierProvider).value?.header ??
-                'header error'),
+        title: Image.asset(width: 200, homeScreenContent.value?.header ?? ''),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +70,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildSearchResults(WidgetRef ref, HomeStateController controller) {
-    switch (ref.watch(homeScreenNotifierProvider)) {
+    final homeScreenContent = ref.watch(homeScreenNotifierProvider);
+
+    switch (homeScreenContent) {
       case AsyncLoading _:
         return const Center(child: CircularProgressIndicator());
       case AsyncData<HomeScreenContent?> data:

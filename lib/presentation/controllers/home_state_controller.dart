@@ -13,7 +13,7 @@ class HomeStateController {
     final bottomSheetContent = ref.watch(bottomSheetNotifierProvider);
     // Open the bottom sheet
     await ref
-        .watch(bottomSheetNotifierProvider.notifier)
+        .read(bottomSheetNotifierProvider.notifier)
         .updateBottomSheetContent(BottomSheetContent(
           controller: bottomSheetContent.value?.controller,
         ));
@@ -46,15 +46,11 @@ class HomeStateController {
       childrenCount: content.value?.childrenCount ?? 0,
     );
 
-    await ref
-        .watch(homeScreenNotifierProvider.notifier)
-        .getFlights(ref, params);
+    await ref.read(homeScreenNotifierProvider.notifier).getFlights(ref, params);
   }
 
   Future updateAdultsCount(WidgetRef ref, int count) async {
-    await ref
-        .watch(homeScreenNotifierProvider.notifier)
-        .updateHomeScreenContent(
+    await ref.read(homeScreenNotifierProvider.notifier).updateHomeScreenContent(
           ref.watch(homeScreenNotifierProvider).value?.copyWith(
                     adultsCount: count,
                   ) ??
@@ -63,9 +59,7 @@ class HomeStateController {
   }
 
   Future updateChildrenCount(WidgetRef ref, int count) async {
-    await ref
-        .watch(homeScreenNotifierProvider.notifier)
-        .updateHomeScreenContent(
+    await ref.read(homeScreenNotifierProvider.notifier).updateHomeScreenContent(
           ref.watch(homeScreenNotifierProvider).value?.copyWith(
                     childrenCount: count,
                   ) ??

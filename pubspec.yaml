@@ -39,9 +39,7 @@ dependencies:
   riverpod_annotation: ^2.6.1
   json_serializable: ^6.9.0
   json_annotation: ^4.9.0
-  go_router: ^14.8.0
   shared_preferences: ^2.5.2
-  firebase_app_check: ^0.3.2+3
   permission_handler: ^11.4.0
   location: ^6.0.2
   http: ^1.3.0
