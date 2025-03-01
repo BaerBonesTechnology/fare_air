@@ -1,7 +1,7 @@
-import 'package:fare_air/models/carrier.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'airport.dart';
+import 'carrier.dart';
 
 part 'leg.g.dart';
 

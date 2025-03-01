@@ -1,5 +1,6 @@
-import 'package:fare_air/models/marketing.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'marketing.dart';
 
 part 'carrier.g.dart';
 

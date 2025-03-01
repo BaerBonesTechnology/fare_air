@@ -1,11 +1,11 @@
-import 'package:fare_air/constants/defaults.dart';
-import 'package:fare_air/models/airport_search_params.dart';
-import 'package:fare_air/models/content/bottom_sheet_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/defaults.dart';
 import '../../di/content_providers/content_providers.dart';
 import '../../models/airport_query_response.dart';
+import '../../models/airport_search_params.dart';
+import '../../models/content/bottom_sheet_content.dart';
 import '../../models/content/home_screen_content.dart';
 
 class SearchBottomSheet extends ConsumerStatefulWidget {
@@ -36,7 +36,9 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
     final bottomSheetContent = ref.watch(bottomSheetNotifierProvider);
     final FocusNode? node = bottomSheetContent.value?.focusNode;
 
-    return Column(
+    return Flex(
+      clipBehavior: Clip.hardEdge,
+      direction: Axis.vertical,
       children: [
         TextField(
             onTapOutside: (pointer) {
@@ -100,7 +102,9 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
               }
             }),
         const Divider(),
-        SizedBox(height: 394.0, child: buildSearchResults(context)),
+        Expanded(
+          child: buildSearchResults(context),
+        ),
       ],
     );
   }
@@ -129,61 +133,56 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
             ));
         return const Center(child: Text('Error loading search results'));
       case AsyncData<AirportQueryResponse> results:
-        return SingleChildScrollView(
-          controller: ScrollController(),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.8,
-            padding: const EdgeInsets.all(8),
-            child: ListView.builder(
-              itemCount: results.value.data.length,
-              itemBuilder: (modalContext, index) {
-                final airport =
-                    results.value.data[index].navigation?.relevantFlightParams;
-                return ListTile(
-                  title: Text(airport?.localizedName ?? ''),
-                  subtitle: Text(airport?.skyId ?? ''),
-                  onTap: () async {
-                    ref
-                        .read(homeScreenNotifierProvider.notifier)
-                        .updateHomeScreenContent(widget.tag == originTag
-                            ? ref
-                                    .read(homeScreenNotifierProvider)
-                                    .value
-                                    ?.copyWith(
-                                      initialSearchLocation:
-                                          airport?.skyId ?? '',
-                                      initialEntityId: airport?.entityId ?? '',
-                                    ) ??
-                                HomeScreenContent.empty()
-                            : ref
-                                    .read(homeScreenNotifierProvider)
-                                    .value
-                                    ?.copyWith(
-                                      departureSearchLocation:
-                                          airport?.skyId ?? '',
-                                      departureEntityId:
-                                          airport?.entityId ?? '',
-                                    ) ??
-                                HomeScreenContent.empty());
-
-                    ref
-                        .read(bottomSheetNotifierProvider.notifier)
-                        .updateBottomSheetContent(
-                          ref
-                                  .watch(bottomSheetNotifierProvider)
+        return SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            controller: ScrollController(),
+            physics: const BouncingScrollPhysics(),
+            itemCount: results.value.data.length,
+            itemBuilder: (_, index) {
+              final airport =
+                  results.value.data[index].navigation?.relevantFlightParams;
+              return ListTile(
+                title: Text(airport?.localizedName ?? ''),
+                subtitle: Text(airport?.skyId ?? ''),
+                onTap: () async {
+                  ref
+                      .read(homeScreenNotifierProvider.notifier)
+                      .updateHomeScreenContent(widget.tag == originTag
+                          ? ref
+                                  .read(homeScreenNotifierProvider)
                                   .value
                                   ?.copyWith(
-                                      searchResults: [],
-                                      bottomSheetHeight: 0.0,
-                                      controller: null) ??
-                              BottomSheetContent.empty(),
-                        );
+                                    initialSearchLocation: airport?.skyId ?? '',
+                                    initialEntityId: airport?.entityId ?? '',
+                                  ) ??
+                              HomeScreenContent.empty()
+                          : ref
+                                  .read(homeScreenNotifierProvider)
+                                  .value
+                                  ?.copyWith(
+                                    departureSearchLocation:
+                                        airport?.skyId ?? '',
+                                    departureEntityId: airport?.entityId ?? '',
+                                  ) ??
+                              HomeScreenContent.empty());
 
-                    Navigator.pop(modalContext);
-                  },
-                );
-              },
-            ),
+                  ref
+                      .read(bottomSheetNotifierProvider.notifier)
+                      .updateBottomSheetContent(
+                        ref.watch(bottomSheetNotifierProvider).value?.copyWith(
+                                searchResults: [],
+                                bottomSheetHeight: 0.0,
+                                controller: null) ??
+                            BottomSheetContent.empty(),
+                      );
+
+                  Navigator.pop(context);
+                },
+              );
+            },
           ),
         );
       default:

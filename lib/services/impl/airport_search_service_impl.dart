@@ -1,16 +1,16 @@
 import 'dart:convert';
 
-import 'package:fare_air/constants/defaults.dart';
-import 'package:fare_air/constants/environment_constants.dart';
-import 'package:fare_air/models/airport_query_response.dart';
-import 'package:fare_air/models/airport_search_params.dart';
-import 'package:fare_air/models/flight_search_params.dart';
-import 'package:fare_air/models/flight_search_response.dart';
-import 'package:fare_air/services/airport_search_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/defaults.dart';
+import '../../constants/environment_constants.dart';
+import '../../models/airport_query_response.dart';
+import '../../models/airport_search_params.dart';
+import '../../models/flight_search_params.dart';
+import '../../models/flight_search_response.dart';
 import '../../models/nearby_airports_response.dart';
+import '../airport_search_service.dart';
 import '../client_service.dart';
 import '../location_service.dart';
 

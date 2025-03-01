@@ -1,6 +1,7 @@
-import 'package:fare_air/models/navigation_data.dart';
-import 'package:fare_air/models/presentation_data.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'navigation_data.dart';
+import 'presentation_data.dart';
 
 part 'current_airport_data.g.dart';
 

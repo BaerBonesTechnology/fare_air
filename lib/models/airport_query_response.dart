@@ -1,5 +1,6 @@
-import 'package:fare_air/models/current_airport_data.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'current_airport_data.dart';
 
 part 'airport_query_response.g.dart';
 

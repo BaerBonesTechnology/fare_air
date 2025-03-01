@@ -1,10 +1,10 @@
-import 'package:fare_air/models/airport_query_response.dart';
-import 'package:fare_air/models/nearby_airports_response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/flight_search_params.dart';
 import '../../../models/flight_search_response.dart';
 import '../../../services/airport_search_service.dart';
+import '../../models/airport_query_response.dart';
+import '../../models/nearby_airports_response.dart';
 
 class AirportServiceController
     extends StateController<AsyncValue<NearbyAirportResponse?>> {

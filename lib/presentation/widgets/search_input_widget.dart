@@ -1,13 +1,13 @@
 import 'dart:math' as math;
 
-import 'package:fare_air/constants/defaults.dart';
-import 'package:fare_air/presentation/controllers/home_state_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../constants/defaults.dart';
 import '../../di/content_providers/content_providers.dart';
 import '../../models/content/home_screen_content.dart';
+import '../controllers/home_state_controller.dart';
 
 class TripSearchInputWidget extends ConsumerStatefulWidget {
   const TripSearchInputWidget({
@@ -53,65 +53,67 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
       decoration: const BoxDecoration(
         color: Colors.lightGreen,
       ),
-      child: Column(
+      height: MediaQuery.of(context).size.height * 0.270,
+      child: Flex(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        direction: Axis.vertical,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Expanded(
+                  flex: 8,
                   child: TextField(
-                controller: originTextController,
-                enabled: true,
-                canRequestFocus: false,
-                onTap: () =>
-                    widget.controller.openBottomSheet(context, ref, originTag),
-                decoration: InputDecoration(
-                  label: Row(
-                    children: [
-                      Transform.rotate(
-                          angle: 45 * math.pi / 180,
-                          child: const Icon(Icons.airplanemode_on_outlined)),
-                      const Text('Origin'),
-                    ],
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: 'Origin',
-                ),
-              )),
-              const SizedBox(
-                width: 10,
-              ),
+                    controller: originTextController,
+                    enabled: true,
+                    canRequestFocus: false,
+                    onTap: () => widget.controller
+                        .openBottomSheet(context, ref, originTag),
+                    decoration: InputDecoration(
+                      label: Row(
+                        children: [
+                          Transform.rotate(
+                              angle: 45 * math.pi / 180,
+                              child:
+                                  const Icon(Icons.airplanemode_on_outlined)),
+                          const Text('Origin'),
+                        ],
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Origin',
+                    ),
+                  )),
+              const Spacer(),
               Expanded(
+                  flex: 8,
                   child: TextField(
-                controller: destinationTextController,
-                canRequestFocus: false,
-                readOnly: true,
-                onTap: () => widget.controller
-                    .openBottomSheet(context, ref, destinationTag),
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Destination',
-                    label: Row(
-                      children: [
-                        Transform.rotate(
-                            angle: 135 * math.pi / 180,
-                            child: const Icon(Icons.airplanemode_on_outlined)),
-                        const Text('Destination'),
-                      ],
-                    )),
-              ))
+                    controller: destinationTextController,
+                    canRequestFocus: false,
+                    readOnly: true,
+                    onTap: () => widget.controller
+                        .openBottomSheet(context, ref, destinationTag),
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Destination',
+                        label: Row(
+                          children: [
+                            Transform.rotate(
+                                angle: 135 * math.pi / 180,
+                                child:
+                                    const Icon(Icons.airplanemode_on_outlined)),
+                            const Text('Destination'),
+                          ],
+                        )),
+                  ))
             ],
           ), // Location Row
-          const SizedBox(
-            height: 10,
-          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Expanded(
-                  flex: 3,
+                  flex: 8,
                   child: TextField(
                     controller: departureDateController,
                     canRequestFocus: false,
@@ -149,11 +151,9 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                       });
                     },
                   )),
-              const SizedBox(
-                width: 10,
-              ),
+              const Spacer(),
               Expanded(
-                  flex: 3,
+                  flex: 8,
                   child: TextField(
                     controller: returnDateController,
                     canRequestFocus: false,
@@ -183,13 +183,11 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
 
                         ref
                             .read(homeScreenNotifierProvider.notifier)
-                            .updateHomeScreenContent(ref
-                                    .watch(homeScreenNotifierProvider)
-                                    .value
-                                    ?.copyWith(
+                            .updateHomeScreenContent(
+                                homeScreenContent.value?.copyWith(
                                       returnDate: value,
                                     ) ??
-                                HomeScreenContent.empty());
+                                    HomeScreenContent.empty());
                       });
                     },
                     decoration: const InputDecoration(
@@ -201,9 +199,6 @@ class _SearchInputWidgetState extends ConsumerState<TripSearchInputWidget> {
                   )),
             ],
           ), // Date Row
-          const SizedBox(
-            height: 10,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

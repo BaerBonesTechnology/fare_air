@@ -35,14 +35,19 @@ class ItineraryDetailsWidget extends StatelessWidget {
                 .toList(),
           )),
           Center(
-            child:
-                itinerary.legs.first.carriers?.marketing.first.logoUrl != null
-                    ? CircleAvatar(
-                        foregroundImage: NetworkImage(itinerary
-                                .legs.first.carriers?.marketing.first.logoUrl ??
-                            ''),
-                      )
-                    : null,
+            child: itinerary.legs.first.carriers?.marketing.first.logoUrl !=
+                    null
+                ? CircleAvatar(
+                    foregroundImage: NetworkImage(
+                      itinerary.legs.first.carriers?.marketing.first.logoUrl ??
+                          '',
+                    ),
+                    backgroundImage:
+                        const AssetImage('assets/fare_air_plane.png'),
+                    onForegroundImageError: (exception, stackTrace) {
+                      debugPrint('Error loading image: $exception');
+                    })
+                : null,
           ),
           const Center(
             child: Text(

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:fare_air/constants/endpoints.dart';
+import '../constants/endpoints.dart';
 
 class AirportSearchParams {
   double latitude;

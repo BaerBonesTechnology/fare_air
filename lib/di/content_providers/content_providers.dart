@@ -1,10 +1,10 @@
-import 'package:fare_air/models/flight_search_params.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models/airport_query_response.dart';
 import '../../../models/content/bottom_sheet_content.dart';
 import '../../../models/content/home_screen_content.dart';
+import '../../models/flight_search_params.dart';
 import '../providers/core_providers.dart';
 
 part 'content_providers.g.dart';
@@ -59,7 +59,7 @@ class HomeScreenNotifier extends _$HomeScreenNotifier {
           final response = data.value;
           content = content.copyWith(
               searchResults: (response?.data?.itineraries ?? []).isEmpty
-                  ? content.searchResults ?? []
+                  ? content.searchResults
                   : response?.data?.itineraries ?? []);
         case AsyncError error:
           state = AsyncError(error.error, error.stackTrace);

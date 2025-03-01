@@ -1,6 +1,7 @@
-import 'package:fare_air/models/relevant_flight_params.dart';
-import 'package:fare_air/models/relevant_hotel_params.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'relevant_flight_params.dart';
+import 'relevant_hotel_params.dart';
 
 part 'navigation_data.g.dart';
 

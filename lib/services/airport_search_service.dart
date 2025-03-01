@@ -1,8 +1,9 @@
-import 'package:fare_air/models/airport_query_response.dart';
-import 'package:fare_air/models/flight_search_params.dart';
-import 'package:fare_air/models/flight_search_response.dart';
-import 'package:fare_air/models/nearby_airports_response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models/airport_query_response.dart';
+import '../models/flight_search_params.dart';
+import '../models/flight_search_response.dart';
+import '../models/nearby_airports_response.dart';
 
 class AirportSearchService {
   Future<AsyncValue<NearbyAirportResponse?>> getNearbyAirports() async {

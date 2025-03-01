@@ -1,6 +1,7 @@
-import 'package:fare_air/services/location_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location/location.dart';
+
+import '../../services/location_service.dart';
 
 class LocationStateController extends StateController<LocationData?> {
   LocationStateController(this.service) : super(null);

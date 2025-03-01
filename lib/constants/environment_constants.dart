@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-import 'package:fare_air/constants/endpoints.dart';
-
 import '../models/config/config_model.dart';
 import 'defaults.dart';
+import 'endpoints.dart';
 
 final ConfigModel _configuration = ConfigModel.fromJson(
     jsonDecode(const String.fromEnvironment('config')..replaceAll("\\", "")));

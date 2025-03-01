@@ -1,7 +1,8 @@
-import 'package:fare_air/models/itinerary.dart';
-import 'package:fare_air/presentation/widgets/itinerary_details_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../../models/itinerary.dart';
+import 'itinerary_details_widget.dart';
 
 class ItineraryWidget extends StatelessWidget {
   const ItineraryWidget({super.key, required this.itinerary});

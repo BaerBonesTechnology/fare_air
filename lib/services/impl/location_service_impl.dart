@@ -1,8 +1,8 @@
-import 'package:fare_air/constants/preference_keys.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants/preference_keys.dart';
 import '../location_service.dart';
 
 class LocationServiceImpl implements LocationService {
